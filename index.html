@@ -1,842 +1,299 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
-
-
 <head>
-
 <meta charset="UTF-8">
-
-
-
-<meta name="viewport"
-
-content="width=device-width, initial-scale=1.0">
-
-
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#ffffff">
-
-
-
 <title>My Wallet</title>
-
-
-
 <style>
-
-
-
 * {
-
-box-sizing: border-box;
-
+  box-sizing: border-box;
 }
-
-
 
 body {
-
-margin: 0;
-
-font-family: -apple-system, BlinkMacSystemFont,
-
-"Segoe UI", Arial, sans-serif;
-
-background: #f4f5f7;
-
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  background: #f4f5f7;
 }
-
-
 
 .app {
-
-max-width: 430px;
-
-min-height: 100vh;
-
-margin: auto;
-
-background: white;
-
-padding: 25px 20px;
-
+  max-width: 430px;
+  min-height: 100vh;
+  margin: auto;
+  background: white;
+  padding: 25px 20px;
 }
-
-
 
 .header {
-
-text-align: center;
-
-margin-top: 10px;
-
+  text-align: center;
+  margin-top: 10px;
 }
-
-
 
 .header h1 {
-
-margin: 0;
-
-font-size: 28px;
-
+  margin: 0;
+  font-size: 28px;
 }
-
-
 
 .subtitle {
-
-color: #777;
-
-margin-top: 5px;
-
+  color: #777;
+  margin-top: 5px;
 }
-
-
 
 .balance-card {
-
-margin-top: 30px;
-
-padding: 30px 20px;
-
-border-radius: 20px;
-
-text-align: center;
-
-background: #f0f2f5;
-
+  margin-top: 30px;
+  padding: 30px 20px;
+  border-radius: 20px;
+  text-align: center;
+  background: #f0f2f5;
 }
-
-
 
 .balance-label {
-
-font-size: 15px;
-
-color: #777;
-
+  font-size: 15px;
+  color: #777;
 }
-
-
 
 .balance {
-
-font-size: 42px;
-
-font-weight: bold;
-
-margin-top: 10px;
-
+  font-size: 42px;
+  font-weight: bold;
+  margin-top: 10px;
 }
 
-
-
-.amount-box {
-
-margin-top: 25px;
-
+.input-group {
+  margin-top: 20px;
 }
 
-
-
-.amount-box input {
-
-width: 100%;
-
-padding: 16px;
-
-border: 1px solid #ddd;
-
-border-radius: 12px;
-
-font-size: 18px;
-
-outline: none;
-
+.input-group input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 16px;
+  outline: none;
+  margin-top: 8px;
 }
-
-
 
 button {
-
-width: 100%;
-
-padding: 16px;
-
-margin-top: 10px;
-
-border: none;
-
-border-radius: 12px;
-
-font-size: 17px;
-
-font-weight: 600;
-
-cursor: pointer;
-
+  width: 100%;
+  padding: 16px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
 }
-
-
 
 .add {
-
-background: #dff5e5;
-
+  background: #dff5e5;
+  color: #135222;
 }
-
-
 
 .spend {
-
-background: #f8dddd;
-
+  background: #f8dddd;
+  color: #5c1414;
 }
-
-
 
 .transactions {
-
-margin-top: 35px;
-
+  margin-top: 35px;
 }
-
-
 
 .transactions h2 {
-
-font-size: 20px;
-
+  font-size: 20px;
 }
-
-
 
 .transaction {
-
-display: flex;
-
-justify-content: space-between;
-
-padding: 14px 5px;
-
-border-bottom: 1px solid #eee;
-
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 5px;
+  border-bottom: 1px solid #eee;
 }
 
+.transaction-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
 
+.transaction-note {
+  font-weight: 500;
+  font-size: 15px;
+  color: #333;
+}
+
+.transaction-type {
+  font-size: 12px;
+  color: #888;
+}
 
 .added {
-
-color: green;
-
+  color: #27ae60;
+  font-weight: 600;
 }
-
-
 
 .spent {
-
-color: red;
-
+  color: #e74c3c;
+  font-weight: 600;
 }
-
-
 
 .empty {
-
-color: #888;
-
-text-align: center;
-
-padding: 20px;
-
+  color: #888;
+  text-align: center;
+  padding: 20px;
 }
-
-
-
 </style>
-
 </head>
-
-
-
-
 
 <body>
 
-
-
 <div class="app">
 
+  <div class="header">
+    <h1>MY WALLET</h1>
+    <div class="subtitle">Personal Money Manager</div>
+  </div>
 
+  <div class="balance-card">
+    <div class="balance-label">Available Balance</div>
+    <div class="balance" id="balance">₹0</div>
+  </div>
 
-<div class="header">
+  <div class="input-group">
+    <input type="number" id="amount" placeholder="Enter amount">
+    <input type="text" id="note" placeholder="Enter note (e.g., Grocery, Salary)">
+  </div>
 
+  <button class="add" onclick="addMoney()">+ Add Money</button>
+  <button class="spend" onclick="spendMoney()">− Spend Money</button>
 
-
-<h1>MY WALLET</h1>
-
-
-
-<div class="subtitle">
-
-Personal Money Manager
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-<div class="balance-card">
-
-
-
-<div class="balance-label">
-
-Available Balance
+  <div class="transactions">
+    <h2>Transactions</h2>
+    <div id="transactionList">
+      <div class="empty">No transactions yet</div>
+    </div>
+  </div>
 
 </div>
-
-
-
-<div class="balance" id="balance">
-
-₹0
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-<div class="amount-box">
-
-
-
-<input
-
-type="number"
-
-id="amount"
-
-placeholder="Enter amount"
-
->
-
-
-
-</div>
-
-
-
-
-
-<button
-
-class="add"
-
-onclick="addMoney()">
-
-
-
-+ Add Money
-
-
-
-</button>
-
-
-
-
-
-<button
-
-class="spend"
-
-onclick="spendMoney()">
-
-
-
-− Spend Money
-
-
-
-</button>
-
-
-
-
-
-<div class="transactions">
-
-
-
-<h2>Transactions</h2>
-
-
-
-<div id="transactionList">
-
-
-
-<div class="empty">
-
-No transactions yet
-
-</div>
-
-
-
-</div>
-
-
-
-</div>
-
-
-
-</div>
-
-
-
-
 
 <script>
-
-
-
-let balance =
-
-Number(localStorage.getItem("walletBalance")) || 0;
-
-
-
-
-
-let transactions =
-
-JSON.parse(
-
-localStorage.getItem("walletTransactions")
-
-) || [];
-
-
-
-
+let balance = Number(localStorage.getItem("walletBalance")) || 0;
+let transactions = JSON.parse(localStorage.getItem("walletTransactions")) || [];
 
 function updateBalance() {
-
-
-
-document.getElementById("balance").innerText =
-
-"₹" + balance.toLocaleString("en-IN");
-
-
-
+  document.getElementById("balance").innerText = "₹" + balance.toLocaleString("en-IN");
 }
-
-
-
-
 
 function updateTransactions() {
+  let list = document.getElementById("transactionList");
+  list.innerHTML = "";
 
+  if (transactions.length === 0) {
+    list.innerHTML = '<div class="empty">No transactions yet</div>';
+    return;
+  }
 
+  transactions.slice().reverse().forEach(function(transaction) {
+    let row = document.createElement("div");
+    row.className = "transaction";
 
-let list =
+    // Left side: Note and Type label
+    let infoDiv = document.createElement("div");
+    infoDiv.className = "transaction-info";
 
-document.getElementById("transactionList");
+    let noteSpan = document.createElement("span");
+    noteSpan.className = "transaction-note";
+    noteSpan.innerText = transaction.note;
 
+    let typeSpan = document.createElement("span");
+    typeSpan.className = "transaction-type";
+    typeSpan.innerText = transaction.type === "add" ? "Added" : "Spent";
 
+    infoDiv.appendChild(noteSpan);
+    infoDiv.appendChild(typeSpan);
 
-list.innerHTML = "";
+    // Right side: Amount
+    let amountSpan = document.createElement("span");
+    amountSpan.innerText = transaction.sign + " ₹" + transaction.amount.toLocaleString("en-IN");
+    amountSpan.className = transaction.type === "add" ? "added" : "spent";
 
-
-
-
-
-if (transactions.length === 0) {
-
-
-
-list.innerHTML =
-
-'<div class="empty">No transactions yet</div>';
-
-
-
-return;
-
-
-
+    row.appendChild(infoDiv);
+    row.appendChild(amountSpan);
+    list.appendChild(row);
+  });
 }
-
-
-
-
-
-transactions
-
-.slice()
-
-.reverse()
-
-.forEach(function(transaction) {
-
-
-
-let row =
-
-document.createElement("div");
-
-
-
-row.className =
-
-"transaction";
-
-
-
-
-
-let description =
-
-document.createElement("span");
-
-
-
-description.innerText =
-
-transaction.description;
-
-
-
-
-
-let amount =
-
-document.createElement("span");
-
-
-
-amount.innerText =
-
-transaction.sign +
-
-" ₹" +
-
-transaction.amount.toLocaleString("en-IN");
-
-
-
-
-
-if (transaction.type === "add") {
-
-
-
-amount.className = "added";
-
-
-
-} else {
-
-
-
-amount.className = "spent";
-
-
-
-}
-
-
-
-
-
-row.appendChild(description);
-
-
-
-row.appendChild(amount);
-
-
-
-list.appendChild(row);
-
-
-
-});
-
-
-
-}
-
-
-
-
 
 function addMoney() {
+  let amountInput = document.getElementById("amount");
+  let noteInput = document.getElementById("note");
+  
+  let amount = Number(amountInput.value);
+  let note = noteInput.value.trim() || "Money Added";
 
+  if (!amount || amount <= 0) {
+    alert("Please enter a valid amount.");
+    return;
+  }
 
+  balance += amount;
 
-let input =
+  transactions.push({
+    type: "add",
+    note: note,
+    amount: amount,
+    sign: "+"
+  });
 
-document.getElementById("amount");
+  saveData();
+  updateBalance();
+  updateTransactions();
 
-
-
-let amount =
-
-Number(input.value);
-
-
-
-
-
-if (!amount || amount <= 0) {
-
-
-
-alert("Please enter a valid amount.");
-
-
-
-return;
-
-
-
+  amountInput.value = "";
+  noteInput.value = "";
 }
-
-
-
-
-
-balance += amount;
-
-
-
-
-
-transactions.push({
-
-
-
-type: "add",
-
-
-
-description: "Money Added",
-
-
-
-amount: amount,
-
-
-
-sign: "+"
-
-
-
-});
-
-
-
-
-
-saveData();
-
-
-
-updateBalance();
-
-
-
-updateTransactions();
-
-
-
-
-
-input.value = "";
-
-
-
-}
-
-
-
-
 
 function spendMoney() {
+  let amountInput = document.getElementById("amount");
+  let noteInput = document.getElementById("note");
+  
+  let amount = Number(amountInput.value);
+  let note = noteInput.value.trim() || "Money Spent";
 
+  if (!amount || amount <= 0) {
+    alert("Please enter a valid amount.");
+    return;
+  }
 
+  if (amount > balance) {
+    alert("Insufficient balance.");
+    return;
+  }
 
-let input =
+  balance -= amount;
 
-document.getElementById("amount");
+  transactions.push({
+    type: "spend",
+    note: note,
+    amount: amount,
+    sign: "-"
+  });
 
+  saveData();
+  updateBalance();
+  updateTransactions();
 
-
-let amount =
-
-Number(input.value);
-
-
-
-
-
-if (!amount || amount <= 0) {
-
-
-
-alert("Please enter a valid amount.");
-
-
-
-return;
-
-
-
+  amountInput.value = "";
+  noteInput.value = "";
 }
-
-
-
-
-
-if (amount > balance) {
-
-
-
-alert("Insufficient balance.");
-
-
-
-return;
-
-
-
-}
-
-
-
-
-
-balance -= amount;
-
-
-
-
-
-transactions.push({
-
-
-
-type: "spend",
-
-
-
-description: "Money Spent",
-
-
-
-amount: amount,
-
-
-
-sign: "-"
-
-
-
-});
-
-
-
-
-
-saveData();
-
-
-
-updateBalance();
-
-
-
-updateTransactions();
-
-
-
-
-
-input.value = "";
-
-
-
-}
-
-
-
-
 
 function saveData() {
-
-
-
-localStorage.setItem(
-
-"walletBalance",
-
-balance
-
-);
-
-
-
-
-
-localStorage.setItem(
-
-"walletTransactions",
-
-JSON.stringify(transactions)
-
-);
-
-
-
+  localStorage.setItem("walletBalance", balance);
+  localStorage.setItem("walletTransactions", JSON.stringify(transactions));
 }
 
-
-
-
-
 updateBalance();
-
-
-
 updateTransactions();
-
-
-
 </script>
 
-
-
 </body>
-
-
-
-</html> 
-
+</html>
